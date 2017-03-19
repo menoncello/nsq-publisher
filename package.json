@@ -1,6 +1,6 @@
 {
   "name": "nsq-publisher",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Simple way to create topics and publish messages in NSQ",
   "main": "index.js",
   "scripts": {
