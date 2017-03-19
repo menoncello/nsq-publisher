@@ -34,7 +34,7 @@ class Publisher {
 
 	publish(message, callback) {
 
-		const nsqWriter = new nsq.Writer(this.options.dataUrl, this.options.dataPort);
+		const nsqWriter = new nsq.Writer(this.dataUrl, this.dataPort);
 
 		nsqWriter.connect();
 		nsqWriter.on('ready', ready);
@@ -45,7 +45,7 @@ class Publisher {
 				return;
 			}
 
-			nsqWriter.publishAsync(this.options.topic, message)
+			nsqWriter.publishAsync(this.topic, message)
 				.then(nsqWriter.close)
 				.catch(callback)
 				.then(() => callback());
