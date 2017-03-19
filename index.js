@@ -9,12 +9,27 @@ class Publisher {
 		this.topic = topic;
 	}
 
+	createTopicAsync() {
+		return request.postAsync(
+				`${this.dataUrl}:${this.dataPort}/topic/create?topic=${this.topic}`
+			);
+	}
+
 	createTopic(callback) {
 		request.postAsync(
 			`${this.dataUrl}:${this.dataPort}/topic/create?topic=${this.topic}`
 			)
 			.catch(callback)
 			.then(() => callback());
+	}
+
+	publishAsync(message) {
+		return new Promise((res, rej) => {
+			this.publish(message, (err) => {
+				if (err) { rej(err); }
+				else { res(); }
+			});
+		});
 	}
 
 	publish(message, callback) {
