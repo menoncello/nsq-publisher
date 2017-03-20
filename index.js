@@ -3,21 +3,22 @@ const nsq = Promise.promisifyAll(require('nsqjs'));
 const request = Promise.promisifyAll(require('request'));
 
 class Publisher {
-	constructor(dataUrl, dataPort, topic) {
+	constructor(dataUrl, dataHttpPort, dataTcpPort, topic) {
 		this.dataUrl = dataUrl;
-		this.dataPort = dataPort;
+		this.dataHttpPort = dataHttpPort;
+		this.dataTcpPort = dataTcpPort;
 		this.topic = topic;
 	}
 
 	createTopicAsync() {
 		return request.postAsync(
-				`${this.dataUrl}:${this.dataPort}/topic/create?topic=${this.topic}`
+				`${this.dataUrl}:${this.dataHttpPort}/topic/create?topic=${this.topic}`
 			);
 	}
 
 	createTopic(callback) {
 		request.postAsync(
-			`${this.dataUrl}:${this.dataPort}/topic/create?topic=${this.topic}`
+			`${this.dataUrl}:${this.dataHttpPort}/topic/create?topic=${this.topic}`
 			)
 			.catch(callback)
 			.then(() => callback());
@@ -33,8 +34,7 @@ class Publisher {
 	}
 
 	publish(message, callback) {
-
-		const nsqWriter = new nsq.Writer(this.dataUrl, this.dataPort);
+		const nsqWriter = new nsq.Writer(this.dataUrl, this.dataTcpPort);
 
 		nsqWriter.connect();
 		nsqWriter.on('ready', ready);
