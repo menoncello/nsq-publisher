@@ -3,37 +3,27 @@ const nsq = Promise.promisifyAll(require('nsqjs'));
 const request = Promise.promisifyAll(require('request'));
 
 class Publisher {
-	constructor(dataUrl, dataHttpPort, dataTcpPort, topic) {
+	constructor({ dataUrl, dataHttpPort, dataTcpPort, topic }) {
 		this.dataUrl = dataUrl;
-		this.dataHttpPort = dataHttpPort;
 		this.dataTcpPort = dataTcpPort;
 		this.topic = topic;
-	}
-
-	createTopicAsync() {
-		return request.postAsync(
-				`${this.dataUrl}:${this.dataHttpPort}/topic/create?topic=${this.topic}`
-			);
+		this.topicUrl = `${dataUrl}:${dataHttpPort}/topic/create?topic=${topic}`
 	}
 
 	createTopic(callback) {
-		request.postAsync(
-			`${this.dataUrl}:${this.dataHttpPort}/topic/create?topic=${this.topic}`
-			)
-			.catch(callback)
-			.then(() => callback());
-	}
-
-	publishAsync(message) {
-		return new Promise((res, rej) => {
-			this.publish(message, (err) => {
-				if (err) { rej(err); }
-				else { res(); }
-			});
-		});
+		return callback
+			? request.postAsync(this.topicUrl)
+				.then(() => callback())
+				.catch(err => callback(err))
+			: request.postAsync(this.topicUrl);
 	}
 
 	publish(message, callback) {
+		if (!callback) {
+			return new Promise((res, rej) =>
+				this.publish(message, (err) => err ? rej(err) : res()));
+		}
+
 		const nsqWriter = new nsq.Writer(this.dataUrl, this.dataTcpPort);
 
 		nsqWriter.connect();
@@ -47,8 +37,8 @@ class Publisher {
 
 			nsqWriter.publishAsync(this.topic, message)
 				.then(nsqWriter.close)
-				.catch(callback)
-				.then(() => callback());
+				.then(() => callback())
+				.catch(() => callback(err));
 		}
 	}
 }
