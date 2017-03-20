@@ -27,9 +27,7 @@ class Publisher {
 		const nsqWriter = new nsq.Writer(this.dataUrl, this.dataTcpPort);
 
 		nsqWriter.connect();
-		nsqWriter.on('ready', ready);
-
-		function ready(err) {
+		nsqWriter.on('ready', err => {
 			if (err) {
 				callback(err);
 				return;
@@ -39,7 +37,7 @@ class Publisher {
 				.then(nsqWriter.close)
 				.then(() => callback())
 				.catch(() => callback(err));
-		}
+		});
 	}
 }
 
