@@ -3,11 +3,11 @@ const nsq = Promise.promisifyAll(require('nsqjs'));
 const request = Promise.promisifyAll(require('request'));
 
 class Publisher {
-	constructor({ dataUrl, dataHttpPort, dataTcpPort, topic }) {
+	constructor({ dataUrl, dataHttpPort, dataTcpPort, topic, protocol }) {
 		this.dataUrl = dataUrl;
 		this.dataTcpPort = dataTcpPort;
 		this.topic = topic;
-		this.topicUrl = `${dataUrl}:${dataHttpPort}/topic/create?topic=${topic}`
+		this.topicUrl = `${protocol || 'http'}://${dataUrl}:${dataHttpPort}/topic/create?topic=${topic}`;
 	}
 
 	createTopic(callback) {
