@@ -1,4 +1,4 @@
-const Promise = require('bluebird');
+const Promise = require('bluebird-tools');
 const nsq = Promise.promisifyAll(require('nsqjs'));
 const request = Promise.promisifyAll(require('request'));
 
