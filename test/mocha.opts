@@ -1,0 +1,4 @@
+  --ui tdd
+  --reporter lcovonly
+  --recursive
+  -R spec
