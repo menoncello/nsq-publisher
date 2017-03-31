@@ -147,9 +147,10 @@ suite('NSQ Publisher', function() {
 		});
 		test('must post in to the topic url once', done => {
 			const publisher = new NsqPublisher({});
-			requestMock.post.callsFake((url, cb) => cb('error'));
+			requestMock.post.callsFake((url, cb) => cb(new Error('error')));
 			publisher.createTopic()
-				.finally(() => {
+				.then(() => done('must not pass'))
+				.catch(() => {
 					expect(requestMock.post.calledOnce).to.be.true;
 					done();
 				});
@@ -257,7 +258,7 @@ suite('NSQ Publisher', function() {
 		test('must call nsqWriter.publish once, passing the message', done => {
 			nsqjsMock.Writer = class extends EventEmitter {
 				publish(topic, message, cb) {
-					cb({});
+					cb(new Error('error'));
 				}
 
 				connect() {
@@ -273,7 +274,8 @@ suite('NSQ Publisher', function() {
 			const publisher = new NsqPublisher({});
 			requestMock.post.callsFake((url, cb) => cb('error'));
 			publisher.createTopic()
-				.finally(() => {
+				.then(() => done('must not pass'))
+				.catch(() => {
 					expect(requestMock.post.calledOnce).to.be.true;
 					done();
 				});
