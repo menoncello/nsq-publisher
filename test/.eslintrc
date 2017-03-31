@@ -1,0 +1,12 @@
+{
+  "env": {
+    "node": true
+  },
+  "plugins": [
+    "node"
+  ],
+  "rules": {
+    "no-undef": 0,
+    "node/no-unpublished-require": 0
+  }
+}
