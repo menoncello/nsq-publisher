@@ -84,7 +84,17 @@ suite('NSQ Publisher', function() {
 	});
 
 	suite('#createTopic', function() {
-		test('calls the request.post once', (done) => {
+		test('never calls the request.post when _createTopic is true', (done) => {
+			const publisher = new NsqPublisher({});
+			publisher._topicCreated = true;
+			publisher.createTopic()
+				.then(() => {
+					expect(requestMock.post.called).to.be.false;
+					done();
+				})
+				.catch(err => done(err));
+		});
+		test('calls the request.post once when _createTopic is false', (done) => {
 			const publisher = new NsqPublisher({});
 			publisher.createTopic()
 				.then(() => {
