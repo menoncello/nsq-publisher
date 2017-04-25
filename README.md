@@ -1,6 +1,7 @@
 # NSQ Publisher
 [![Build Status](https://travis-ci.org/menoncello/nsq-publisher.svg?branch=master)](https://travis-ci.org/menoncello/nsq-publisher)
 [![Coverage Status](https://coveralls.io/repos/github/menoncello/nsq-publisher/badge.svg?branch=1.0-version)](https://coveralls.io/github/menoncello/nsq-publisher?branch=1.0-version)
+[![Dependency Status](https://img.shields.io/david/menoncello/nsq-publisher.svg?style=flat-square)](https://david-dm.org/request/request)
 
 Simple way to create topics and publish messages.
 
